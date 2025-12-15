@@ -1,5 +1,7 @@
 # Celebrato
 
+Event booking platform which works like Airbnb style but for events.
+
 A platform for booking and managing listings, built with Node.js and Express.
 
 ## Features
