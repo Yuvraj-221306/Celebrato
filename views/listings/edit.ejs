@@ -1,0 +1,92 @@
+<% layout("/layouts/boilerplate") %>
+
+    <div class="row mt-3">
+        <div class="col-8 offset-2">
+
+            <form method="POST" action="/listings/<%= listing._id%>?_method=PUT " class="needs-validation" novalidate
+                enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input name="listing[title]" value="<%= listing.title %>" type="text" class="form-control" required>
+                    <div class="valid-feedback">Title looks good!</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea name="listing[description]" class="form-control"
+                        required><%= listing.description %></textarea>
+                    <div class="invalid-feedback">please enter a short description</div>
+                </div>
+
+                <div class="mb-3">
+                    Original Listing Image<br>
+                    <img src="<%= originalImageUrl %>" height="150px" width="300px">
+                </div>
+
+                <div class="mb-3">
+                    <label for="image" class="form-label">Upload New Listing Image</label>
+                    <input name="listing[images]" type="file" class="form-control">
+                    <div class="invalid-feedback">please enter a valid link</div>
+                </div>
+
+                <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <label for="price" class="form-label">Price</label>
+                        <input name="listing[price]" value="<%= listing.price %>" type="number" class="form-control"
+                            required>
+                        <div class="invalid-feedback">Please enter a valid price</div>
+                    </div>
+
+                    <div class="mb-3 col-md-8">
+                        <label for="country" class="form-label">Country</label>
+                        <input name="listing[country]" value="<%= listing.country %>" type="text" class="form-control"
+                            required>
+                        <div class="invalid-feedback">please enter the country</div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <input name="listing[location]" value="<%= listing.location %>" type="text" class="form-control"
+                        required>
+                    <div class="invalid-feedback">please enter the location</div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Categories</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="listing[categories][]" id="dj" value="DJ"
+                            <% if (listing.categories && listing.categories.includes('DJ')) { %>checked<% } %>>
+                            <label class="form-check-label" for="dj">DJ</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="listing[categories][]" id="decorator"
+                            value="Decorator" <% if (listing.categories && listing.categories.includes('Decorator')) {
+                            %>checked<% } %>>
+                            <label class="form-check-label" for="decorator">Decorator</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="listing[categories][]" id="caterer"
+                            value="Caterer" <% if (listing.categories && listing.categories.includes('Caterer')) {
+                            %>checked<% } %>>
+                            <label class="form-check-label" for="caterer">Caterer</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="listing[categories][]" id="photographer"
+                            value="Photographer" <% if (listing.categories &&
+                            listing.categories.includes('Photographer')) { %>checked<% } %>>
+                            <label class="form-check-label" for="photographer">Photographer</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="listing[categories][]" id="other"
+                            value="Other" <% if (listing.categories && listing.categories.includes('Other')) { %>checked
+                        <% } %>>
+                            <label class="form-check-label" for="other">Other</label>
+                    </div>
+                </div>
+
+                <button class="btn btn-dark edit-btn mt-3">Edit</button>
+                <br><br>
+            </form>
+        </div>
+    </div>

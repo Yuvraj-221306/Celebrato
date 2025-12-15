@@ -1,0 +1,73 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  .save-icon {
+    color: pink;
+    transition: color 0.2s;
+    cursor: pointer;
+    font-size: 2rem;
+    position: absolute;
+    top: 10px;
+    right: 16px;
+    z-index: 2;
+  }
+  .save-icon.clicked {
+    color: rgb(103, 5, 5);
+  }
+</style>
+
+<h2 class="mb-4">My Wishlist</h2>
+
+<% if (wishlist && wishlist.length > 0) { %>
+  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3" style="background-color: #f8f9fa; padding: 2rem; border-radius: 1rem;">
+    <% wishlist.forEach(listing => { %>
+      <div class="col mb-4" style="position: relative;">
+        <div class="card listing-card mb-4" style="background: transparent; border: none;">
+              <a href="/listings/<%= listing._id %>" style="text-decoration: none; color: inherit;">
+          <% if (listing.images && listing.images.length > 0) { %>
+            <img src="<%= listing.images[0].url %>" class="card-img-top" alt="listing_image" style="height: 15rem; object-fit: cover;">
+          <% } %>
+          <i class="fa-solid fa-heart save-icon clicked" data-id="<%= listing._id %>"></i>
+          <div class="card-body" style="color: #333;">
+            <h5 class="card-title"><%= listing.title %></h5>
+            <p class="card-text mb-2">
+              &#8377; <%= listing.price.toLocaleString("en-IN") %> 
+              
+            </p>
+            <p class="card-text">
+              <strong>Location:</strong> <%= listing.location %>
+            </p>
+          </div>
+           </a>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+<% } else { %>
+<div class="d-flex flex-column justify-content-center align-items-center" style="height: 200px;">
+  <i class="fa-regular fa-heart fs-1 mb-2 text-danger"></i>
+  <p class="text-secondary fw-bold fs-5 mb-0">Your wishlist is empty.</p>
+  <p class="text-muted">Start exploring and add your favorite listings!</p>
+</div>
+<% } %>
+
+<script>
+  document.querySelectorAll('.save-icon.clicked').forEach(icon => {
+    icon.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const listingId = icon.getAttribute('data-id');
+      const res = await fetch(`/wishlist/${listingId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" }
+      });
+      if (res.ok) {
+        icon.classList.remove('clicked');
+        
+        icon.closest('.col').remove();
+      } else {
+        alert("Failed to remove from wishlist.");
+      }
+    });
+  });
+</script>

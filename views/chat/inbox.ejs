@@ -1,0 +1,37 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  .list-group-item:hover {
+    background-color: #e0f7f1;
+  }
+
+  .btn-primary:hover {
+    background-color: #16a085 !important;
+    border-color: #13876f !important;
+  }
+</style>
+
+<div class="container mt-5" style="max-width: 600px;">
+  <h3 class="mb-4" style="color: #2c3e50; font-weight: 600;">Inbox</h3>
+  <ul class="list-group shadow-sm rounded border-0">
+    <% conversations.forEach(conv => { %>
+      <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-4 py-3" 
+          style="background-color: #f9fafb; transition: background-color 0.3s ease;">
+        <span style="color: #34495e; font-weight: 500; font-size: 1.1rem;">
+          <% if (conv.otherUser.name) { %>
+            <%= conv.otherUser.name %>
+          <% } else { %>
+            <%= conv.otherUser.username %>
+          <% } %>
+        </span>
+        <a href="/chat/<%= conv.listingId %>/<%= conv.otherUser._id %>" 
+           class="btn btn-primary btn-sm rounded-pill"
+           style="background-color: #1abc9c; border-color: #16a085; font-weight: 600; letter-spacing: 0.03em;">
+          Open Chat
+        </a>
+      </li>
+    <% }) %>
+  </ul>
+</div>
+
+

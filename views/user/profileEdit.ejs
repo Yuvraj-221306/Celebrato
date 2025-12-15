@@ -1,0 +1,55 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="row mt-3">
+  <div class="col-8 offset-2">
+    <form method="POST" action="/profile?_method=PUT" class="needs-validation" novalidate enctype="multipart/form-data">
+
+      
+      <% if (originalImageUrl) { %>
+        <div class="mb-3" style="text-align: center;">
+          <img src="<%= originalImageUrl %>" height="150px" width="150px" style="border-radius: 50%;">
+        </div>
+      <% } else { %>
+        <div class="mb-3" style="text-align: center;">
+                <i class="fa-solid fa-user fa-3x"></i>
+                </div>
+                <% } %>
+      
+
+
+     
+      <div class="mb-3">
+        <label for="username" class="form-label">Name</label>
+        <input
+          name="user[username]"
+          value="<%= user.username %>"
+          type="text"
+          class="form-control"
+          required>
+        <div class="valid-feedback">Name looks good!</div>
+      </div>
+
+     
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input
+          name="user[email]"
+          value="<%= user.email %>"
+          type="email"
+          class="form-control"
+          required>
+        <div class="valid-feedback">Email looks good!</div>
+      </div>
+
+    
+      
+      <div class="mb-3">
+        <label for="image" class="form-label">Upload New Profile Image</label>
+        <input name="image" type="file" class="form-control">
+      </div>
+
+      <!-- Submit Button -->
+      <button class="btn btn-dark edit-btn mt-3">Update Profile</button>
+    </form>
+  </div>
+</div>

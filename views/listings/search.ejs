@@ -1,0 +1,97 @@
+<% layout("/layouts/boilerplate") %>
+
+ <style>
+  .save-icon.clicked {
+  color: rgb(103, 5, 5);
+}
+</style>
+
+<div class="row row-cols-lg-3 row-cols-mid-2 row-cols-sm-1 mt-3">
+    <% let found = false; %>
+    <% for(let listing of allListings) { %>
+        <% 
+            let match = false;
+         
+            // Category filter
+            if (categories) {
+        const categoriesArray = categories.split(',');
+        for (let c of categoriesArray) {
+            if (listing.categories && listing.categories.includes(c.trim())) {
+                match = true;
+                break;
+            }
+        }
+    }
+            // Location or title filter
+            else if (
+                (listing && listing.location && location && location.toLowerCase() === listing.location.toLowerCase()) ||
+                (listing && listing.title && location && location.toLowerCase() === listing.title.toLowerCase())
+            ) {
+                match = true;
+            }
+        %>
+        <% if (match) { %>
+            <% found = true; %>
+            <a href="/listings/<%= listing._id %>" class="listing-link">
+                <div class="card col listing-card"  style="border-radius: 1rem;">
+                    <img src="<%= listing.images[0].url %>" class="card-img-top" alt="listing_image"
+                        style="height: 15rem;">
+                    <div class="card-img-overlay"> <i class="fa-solid fa-heart fa-2x save-icon <%= currUser && currUser.wishlist && currUser.wishlist.includes(listing._id) ? 'clicked' : '' %>" data-listing-id="<%= listing._id %>" onclick="event.stopPropagation(); event.preventDefault();"></i> </div>
+                    <div class="card-body">
+                        <p class="card-text">
+                            <%= listing.title %><br>
+                            &#8377; <%= listing.price.toLocaleString("en-IN") %>
+                        </p>
+                    </div>
+                </div>
+            </a>
+           
+        <% } %>
+    <% } %>
+
+    <% if (!found) { %>
+        <div style="display: flex; justify-content: center; align-items: center; height: 200px; margin-left: 30vw;">
+            <p style="color: #d9534f; font-weight: bold; font-size: 1.2rem;">
+                Sorry, no listings found
+                <% if (typeof categories !== "undefined" && categories) { %>
+                    for category "<%= categories %>"
+                <% } else if (location) { %>
+                    for "<%= location %>"
+                <% } %>
+                . Please try another search!
+            </p>
+        </div>
+    <% } %>
+</div>
+
+    <script>
+    document.querySelectorAll('.save-icon').forEach(icon => {
+      const listingId = icon.getAttribute('data-listing-id');
+      let wishlisted = icon.classList.contains('clicked');
+
+      icon.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        let res;
+        if (!wishlisted) {
+          res = await fetch(`/wishlist/${listingId}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+          });
+        } else {
+          res = await fetch(`/wishlist/${listingId}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+          });
+        }
+
+        if (res.ok) {
+          icon.classList.toggle('clicked');
+          wishlisted = !wishlisted;
+        } else {
+          alert("Failed to update wishlist.");
+        }
+      });
+    });
+  </script>

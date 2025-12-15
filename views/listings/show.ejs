@@ -1,0 +1,831 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+
+     #map { 
+        height: 400px;
+        width: 100% !important;
+        border-radius: 20px;
+     }
+
+        .profile-placeholder {
+            color: #6c757d;
+            margin-bottom: 1rem;
+        }
+
+        .image-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .flex-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+        }
+
+        .booking {
+            height: 330px;
+            width: 400px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
+        }
+
+        .host {
+            height: 300px;
+            width: 400px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
+        }
+
+        .show-container {
+
+            display: flex;
+            gap: 10px;
+
+        }
+
+        .box1 {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .box2 {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+
+
+        .image img {
+            height: 24vh;
+            border-radius: 2px !important;
+        }
+
+        .xyz img {
+            border-bottom-right-radius: 2px !important;
+            border-top-right-radius: 2px !important;
+        }
+
+        .zyx img {
+            border-top-right-radius: 15px !important;
+        }
+
+        .yzx img {
+            border-bottom-right-radius: 15px !important;
+        }
+
+        .image.yzx {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px; /* Optional: for rounded corners on the image */
+}
+
+.image.yzx img {
+    width: 100%;
+    display: block;
+    border-radius: 15px; /* Ensure the image itself is rounded */
+    object-fit: cover;
+}
+
+/* Full overlay covering the entire image */
+.overlay-full {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Dark transparent overlay */
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px; /* Match image rounding */
+    pointer-events: none; /* Allow clicks to pass through to <a> */
+}
+
+
+        .fa-heart {
+            color: pink;
+        }
+    
+.sticky-booking {
+    position: sticky;
+    top: 120px;
+     margin-top: 20px;
+    z-index: 10;
+}
+
+ .popup-overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+  }
+  /* Popup card */
+  .popup-card {
+    background: white;
+    padding: 20px 15px;
+    border-radius: 8px;
+    height: 200px;
+    width: 320px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    position: relative;
+    text-align: center;
+  }
+  /* Close button */
+  .close-btn {
+    position: absolute;
+    top: -3px;
+    right: 1px;
+    font-size: 22px;
+    cursor: pointer;
+    border: none;
+    background: none;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  @media (max-width: 767px) {
+  .show-container {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 10px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    width: 100vw;
+    padding-bottom: 10px;
+    position: relative;
+  }
+
+  .show-container > .box1,
+  .show-container > .box2 {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    flex: 0 0 auto;
+    width: auto;
+    margin: 0;
+    padding: 0;
+  }
+
+  .show-container img {
+    width: 70vw;
+    min-width: 70vw;
+    max-width: 80vw;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+  }
+
+  /* Force flex direction row on these classes if they appear inside boxes */
+  .box1, .box2, .image, .xyz, .zyx, .yzx {
+    flex-direction: row;
+    width: auto;
+  }
+
+  .image {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Overlay +N on last image in last box2 */
+  .show-container > .box2:last-child > .image.yzx {
+    position: relative;
+  }
+  .show-container > .box2:last-child > .image.yzx::after {
+    content: "+1";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 0.5em 1em;
+    border-radius: 1em;
+    pointer-events: none;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    height: 80%;
+  }
+
+  /* Hide the “show all photos” button if needed */
+  .image-button {
+    display: none;
+  }
+}
+
+/* review and comment section layout on mobile */
+  @media (max-width: 767px) {
+  .mb-3, .card.col-5, .row {
+    width: 100% !important;
+    max-width: 100vw !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  .card.col-5 {
+    min-width: 0 !important;
+    flex: 1 1 100% !important;
+  }
+  .row {
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+  .mb-3.mt-3, .mb-3 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  form.needs-validation, .starability-slot, textarea, .form-control {
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+  .btn.btn-outline-dark {
+    width: auto;     /* let it size according to content */
+    padding: 0.25rem 0.5rem;  /* smaller padding */
+    font-size: 0.875rem;      /* a bit smaller font */
+    margin: 0.5rem 0;    
+  }
+}
+
+/* Edit/Delete button layout on mobile */
+  @media (max-width: 767px) {
+  .btns {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 1rem !important;
+    width: 100% !important;
+    margin-bottom: 1rem !important;
+    justify-content: stretch !important;
+  }
+  .btns a,
+  .btns form {
+    flex: 1 1 0 !important;
+    margin: 0 !important;
+  }
+  .btns .btn,
+  .btns button {
+     width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media (max-width: 767px) {
+  footer {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  iframe[src*="calendar.google.com"] {
+    display: none !important;
+  }
+}
+
+/* save and share icon on mobile */
+@media (max-width: 767px) {
+  .d-flex.justify-content-between > div:last-child {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 0.5rem !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+  }
+  #shareBtn,
+  #save {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 10px;
+    font-size: 0; /* Hide text */
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+  #shareBtn i,
+  #save i {
+    font-size: 1.3rem;
+    margin: 0 !important;
+  }
+}
+ 
+
+</style>
+
+
+
+    <div class="row mt-4">
+        <div class="d-flex justify-content-between">
+            <div>
+                <h3>
+                    <%= listing.title %>
+                </h3>
+            </div><br>
+          <div>
+                <button class="btn btn-light" id="shareBtn">
+                  <i class="fa-regular fa-share-from-square"></i> Share
+                </button>
+
+           <div id="popup" class="popup-overlay" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+                   <div class="popup-card">
+                      <button class="close-btn" id="closeBtn" aria-label="Close popup">&times;</button>
+                      <h2 id="popupTitle">Share this content</h2><br>
+                   <div class="share-buttons">
+
+                    <div class="container">
+                          <div class="row g-3">
+                             <!-- WhatsApp -->
+                            <div class="col-6">
+                             <a class="btn btn-success w-100 d-flex align-items-center justify-content-center share-whatsapp"
+                                href="#" target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp">
+                               <i class="fab fa-whatsapp me-2"></i> WhatsApp
+                             </a>
+                            </div>
+
+                             <!-- Facebook -->
+                            <div class="col-6">
+                             <a class="btn btn-primary w-100 d-flex align-items-center justify-content-center share-facebook"
+                                href="#" target="_blank" rel="noopener noreferrer" aria-label="Share on Facebook">
+                                <i class="fab fa-facebook me-2"></i> Facebook
+                             </a>
+                            </div>
+
+                             <!-- Copy Link -->
+                            <div class="col-6">
+                             <button id="copyLinkBtn"
+                                class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center"
+                                aria-label="Copy page URL">
+                                <i class="fas fa-link me-2"></i> Copy Link
+                             </button>
+                            </div>
+
+                             <!-- Instagram -->
+                            <div class="col-6">
+                             <a class="btn btn-danger w-100 d-flex align-items-center justify-content-center"
+                                href="https://www.instagram.com/yourprofile" target="_blank" rel="noopener noreferrer"
+                                aria-label="Visit Instagram Profile">
+                                <i class="fab fa-instagram me-2"></i> Instagram
+                             </a>
+                            </div>
+                    </div>
+            </div>
+
+
+          </div>
+
+         </div>
+    </div>
+
+
+                <button class="btn  btn-light" id="save" data-listing-id="<%= listing._id %>"
+                    data-wishlisted="<%= currUser && currUser.wishlist && currUser.wishlist.includes(listing._id) %>"><i
+                        class="fa-solid fa-heart"></i> Save </button>
+        </div>
+        </div>
+        <div class=" show-card listing-card">
+            <div class="show-container">
+                <div class="box1">
+                    <div class="xyz">
+                        <img src="<%= (listing.images && listing.images[0]) ? listing.images[0].url : '' %>"
+                            class="card-img-top show-img" alt="listing_image">
+                    </div>
+                </div>
+
+                <div class="box2">
+                    <div class="image">
+                        <img src="<%= (listing.images && listing.images[0]) ? listing.images[0].url : '' %>"
+                            class="card-img-top" alt="listing_image">
+                    </div>
+                    <div class="image">
+                        <img src="<%= (listing.images && listing.images[1]) ? listing.images[1].url : (listing.images && listing.images[0] ? listing.images[0].url : '') %>"
+                            class="card-img-top" alt="listing_image">
+                    </div>
+                </div>
+
+                <div class="box2">
+                    <div class="image zyx">
+                        <img src="<%= (listing.images && listing.images[2]) ? listing.images[2].url : (listing.images && listing.images[0] ? listing.images[0].url : '') %>"
+                            class="card-img-top" alt="listing_image">
+                    </div>
+                    <div class="image yzx">
+                        <a href="/listings/<%= listing._id %>/allphotos">
+                           <img src="<%= (listing.images && listing.images[3]) ? listing.images[3].url : (listing.images && listing.images[0] ? listing.images[0].url : '') %>"
+                            class="card-img-top" alt="listing_image" style="cursor:pointer;">
+                            <% if (listing.images && listing.images.length > 4) { %>
+                             <div class="overlay-full">+<%= listing.images.length - 4 %></div>
+                            <% } %>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="flex-container d-flex align-items-start gap-4">
+                <div class="card-body col-7">
+                    <p class="card-text">Owned By
+                        <i>
+                            <%= listing.owner.username %>
+                        </i>
+                    </p>
+
+                    <p class="card-text">
+                        <%= listing.description %> <br>
+                    </p>
+                    <p class="card-text"> &#8377; <%= listing.price.toLocaleString("en-IN")%> <br></p>
+                    <p class="card-text">
+                        <%= listing.location %> <br>
+                    </p>
+                    <p class="card-text">
+                        <%= listing.country %><br>
+                    </p>
+                    <p class="card-text">
+                        <%= listing.categories %><br>
+                    </p>
+                    <hr>
+                    <iframe
+                        src="https://calendar.google.com/calendar/embed?src=yuvraj7847%40gmail.com&ctz=Asia%2FKolkata"
+                        style="border: 0" width="300" height="300" frameborder="0" scrolling="no">
+                    </iframe> &nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <iframe
+                        src="https://calendar.google.com/calendar/embed?src=yuvraj7847%40gmail.com&ctz=Asia%2FKolkata"
+                        style="border: 0" width="300" height="300" frameborder="0" scrolling="no">
+                    </iframe>
+                </div>
+
+
+                <div class="mt-5 booking card p-4 sticky-booking">
+
+                    <form action="/booking/payment" method="POST" id="bookingForm" class="needs-validation" novalidate>
+
+                        <input type="hidden" name="listingId" value="<%= listing._id %>">
+                        <div class="mb-3">
+                            <label for="contact" class="form-label">Contact Number</label>
+                            <input type="tel" class="form-control" id="contact" name="contact"
+                                placeholder="123-456-7890" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="startDate" class="form-label">Start Date</label>
+                            <input type="date" class="form-control" id="startDate" name="startDate" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="endDate" class="form-label">End Date</label>
+                            <input type="date" class="form-control" id="endDate" name="endDate" required>
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-dark edit-btn">Reserve</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        <br>
+        <% if(currUser && (listing.owner._id.equals(currUser._id) || currUser.isAdmin)) { %>
+            <div class="btns">
+                <a href="/listings/<%= listing._id%>/edit" class="btn btn-dark col-1  edit-btn">Edit </a>
+
+                <form method="POST" action="/listings/<%= listing._id%>?_method=DELETE">
+                    <button class="btn btn-dark  offset-5">Delete </button>
+                </form>
+            </div>
+            <% } %>
+
+
+                <div class=" mb-3">
+
+                    <% if(currUser) { %>
+                        <hr>
+                        <h4>Leave a Review</h4>
+                        <form action="/listings/<%= listing._id%>/reviews" method="POST" novalidate
+                            class="needs-validation">
+
+                            <div class="mb-3 mt-3">
+                                <label for="rating" class="form-label">Rating</label>
+                                <fieldset class="starability-slot">
+                                    <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]"
+                                        value="1" checked aria-label="No rating." />
+                                    <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                                    <label for="first-rate1" title="Terrible">1 star</label>
+                                    <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                                    <label for="first-rate2" title="Not good">2 stars</label>
+                                    <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                                    <label for="first-rate3" title="Average">3 stars</label>
+                                    <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                                    <label for="first-rate4" title="Very good">4 stars</label>
+                                    <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                                    <label for="first-rate5" title="Amazing">5 stars</label>
+                                </fieldset>
+                            </div>
+                            <div class="mb-3 mt-3">
+                                <label for="comment" class="form-label">Comments</label>
+                                <textarea name="review[comment]" id="comment" cols="30" rows="5" class="form-control"
+                                    required></textarea>
+                                <div class="invalid-feedback">Please submit some comments for review</div>
+                            </div>
+                            <button class="btn btn-outline-dark">Submit</button>
+                        </form>
+
+                        <% } %>
+
+
+                            <% if(listing.reviews.length>0) {%>
+                                <hr>
+                                <div class="row">
+                                    <p><b>All Reviews</b></p>
+                                    <% for (let i=0; i < listing.reviews.length && i < 6; i++) { let
+                                        review=listing.reviews[i]; %>
+
+                                        <div class="card col-5 ms-3 mb-3">
+                                            <div class="card-body">
+                                                <h5 class="card-title">@<%= review.author.username %>
+                                                </h5>
+                                                <p class="starability-result card-text"
+                                                    data-rating="<%= review.rating %>">
+                                                </p>
+                                                <p class="card-text">
+                                                    <%= review.comment %>
+                                                </p>
+                                                <% if (currUser && (review.author && review.author.equals(currUser._id) || currUser.isAdmin))
+                                                    { %>
+
+                                                    <form class="mb-3" method="POST"
+                                                        action="/listings/<%= listing._id%>/reviews/<%=review._id%>?_method=DELETE">
+                                                        <button class="btn btn-sm btn-dark">Delete</button>
+                                                    </form>
+                                                    <% } %>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                                </div>
+                                <a href="/listings/<%= listing._id %>/reviews/allreview"
+                                    class="btn btn-outline-dark">All Reviews</a>
+                                <%}%>
+                </div>
+                <hr>
+                
+                <div>
+                    <h4>Where you'll be</h4>
+                    <br>
+                    <h5>
+                        <%= listing.location %> , <%= listing.country%>
+                        </h5>
+                    
+                    <br>
+                    <div id="map"></div>
+                    <br><br>
+                </div>
+                
+
+                    <hr>
+                <div>
+                    <h4>Meet Your Host</h4>
+                    <div class="flex-container d-flex align-items-start gap-4">
+                        <div class="mt-3 host card p-4">
+                            <div class="d-flex w-100">
+
+                                <div class="d-flex flex-column justify-content-center align-items-center"
+                                    style="width: 66.66%;">
+                                    <% if(listing && listing.owner && listing.owner.image && listing.owner.image.url) {
+                                        %>
+                                        <img src="<%= listing.owner.image.url %>" alt=" no profile" height="100px"
+                                            width="100px" style="border-radius: 50%;">
+                                        <% } else {%>
+                                            <div>
+                                                <i class="fa-solid fa-user fa-5x profile-placeholder"></i>
+                                            </div>
+                                            <%}%>
+
+                                                <h2>
+                                                    <%= listing.owner.username %>
+                                                </h2>
+                                                <p>superhost</p>
+                                </div>
+
+
+                                <div style="width: 33.33%;" class="mb-2 mt-2">
+
+                                    <% const totalReviews=listing.reviews.length; let sum=0; listing.reviews.forEach(r=>
+                                        sum += r.rating);
+                                        const avgRating = totalReviews > 0 ? (sum / totalReviews).toFixed(2) : "No ratings";
+                                        %>
+
+                                        <h4>
+                                            <%= totalReviews %>
+                                        </h4>
+                                        <small>Review</small>
+                                        <hr>
+
+                                        <h4>
+                                            <%= avgRating %>
+                                        </h4>
+                                        <small>Ratings</small>
+                                        <hr>
+                                        <h4>
+                                            <%= listing.reviews.length %>
+                                        </h4>
+                                        <small>Review</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        &nbsp;&nbsp;&nbsp;
+
+                        <div class="card-body col-7 mt-3">
+                            <p class="card-text">
+                                <i>
+                                    <h4>
+                                        <%= listing.owner.username %> is a superhost
+                                    </h4>
+                                </i>
+                            </p>
+
+                            <p class="card-text">
+                                Superhosts are experienced, highly rated hosts who are committed to providing great
+                                stays for guests.<br>
+                            </p>
+                            <p class="card-text">
+                                <i>
+                                    <h4>
+                                        Host Details
+                                    </h4>
+                                </i>
+                            </p>
+                            <p class="card-text">
+                                Response rate: 100%<br>
+                                Responds within an hour
+                            </p>
+                      <a href="/chat/<%= listing._id %>/<%= listing.owner._id %>" class="btn btn-outline-dark">
+                          Message Host
+                         </a>
+                        </div>
+                    </div>
+
+                </div>
+    </div>
+
+    <br>
+
+
+
+    <script>
+        const saveBtn = document.getElementById("save");
+        const heart = saveBtn.querySelector(".fa-heart");
+        const listingId = saveBtn.getAttribute("data-listing-id");
+        let wishlisted = saveBtn.getAttribute("data-wishlisted") === "true";
+
+        // Set initial heart color
+        if (wishlisted) {
+            heart.style.color = "red";
+        } else {
+            heart.style.color = "pink";
+        }
+
+        saveBtn.addEventListener("click", async () => {
+            try {
+                let res;
+                if (!wishlisted) {
+                    res = await fetch(`/wishlist/${listingId}`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" }
+                    });
+                } else {
+                    res = await fetch(`/wishlist/${listingId}`, {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json" }
+                    });
+                }
+                if (res.ok) {
+                    wishlisted = !wishlisted;
+                    heart.style.color = wishlisted ? "red" : "pink";
+                } else {
+                    alert("Failed to update wishlist.");
+                }
+            } catch (err) {
+                alert("Error updating wishlist.");
+            }
+        });
+    </script>
+
+    <script>
+
+        const pageUrl = encodeURIComponent(window.location.href);
+        const pageTitle = encodeURIComponent(document.title);
+
+        const shareBtn = document.getElementById('shareBtn');
+        const popup = document.getElementById('popup');
+        const closeBtn = document.getElementById('closeBtn');
+
+        const whatsappUrl = `https://api.whatsapp.com/send?text=${pageTitle}%20${pageUrl}`;
+        const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
+
+       document.querySelector('.share-whatsapp').href = whatsappUrl;
+       document.querySelector('.share-facebook').href = facebookUrl;
+
+       shareBtn.addEventListener('click', () => {
+       popup.style.display = 'flex';
+       popup.focus(); 
+       });
+
+      closeBtn.addEventListener('click', () => {
+      popup.style.display = 'none';
+      shareBtn.focus();
+      });
+
+     popup.addEventListener('click', (e) => {
+      if (e.target === popup) {
+      popup.style.display = 'none';
+      shareBtn.focus();
+      }
+     });
+
+     document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && popup.style.display === 'flex') {
+      popup.style.display = 'none';
+      shareBtn.focus();
+      }
+     });
+</script>
+
+
+<script>
+    const copyBtn = document.getElementById('copyLinkBtn');
+
+    copyBtn.addEventListener('click', () => {
+    const pageUrl = window.location.href;
+
+    navigator.clipboard.writeText(pageUrl)
+      .then(() => {
+        copyBtn.innerHTML = '<i class="fas fa-check-circle"></i> Copied!';
+       setTimeout(() => {
+        copyBtn.innerHTML = '<i class="fas fa-link"></i> Copy Link';
+       }, 2000);
+     })
+     .catch(err => {
+       alert('Failed to copy the link');
+       console.error('Clipboard error:', err);
+     });
+});
+</script>
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+  // Get the address from the backend (e.g., "listing.location")
+  const address = "<%= listing.location %> ,  <%= listing.country %>";
+
+  // Encode the address for the API URL
+  const encodedAddress = encodeURIComponent(address);
+
+  // Call OpenStreetMap's Nominatim geocoding API from the browser
+  fetch(`https://nominatim.openstreetmap.org/search?q=${encodedAddress}&format=json&limit=1`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.length === 0) {
+        alert("Could not find coordinates for this location.");
+        return;
+      }
+
+      const lat = parseFloat(data[0].lat);
+      const lng = parseFloat(data[0].lon);
+
+      const map = L.map('map').setView([lat, lng], 13);
+
+        map.scrollWheelZoom.disable();
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      L.marker([lat, lng]).addTo(map)
+        .bindPopup("<%= listing.title %> - <%= listing.location %>")
+        .openPopup();
+    })
+    .catch(err => {
+      console.error("Geocoding error:", err);
+      alert("Error loading map location.");
+    });
+</script>
+

@@ -1,0 +1,50 @@
+<% layout("/layouts/boilerplate") %>
+
+  <div class="row row-cols-lg-3 row-cols-mid-2 row-cols-sm-1 mt-3">
+      <% const hasAny = currUser && allListings.some(listing => listing.owner.equals(currUser._id)); %>
+       <% if (hasAny) { %>
+         <h3 style="width:100%">All Listings</h3>
+    <% for(let listing of allListings) { %>
+       <% if(currUser && listing.owner.equals(currUser._id)) { %>
+                  <% found = true; %>
+      <a href="/listings/<%= listing._id %>" class="listing-link">
+        <div class="card col listing-card" style="border-radius: 1rem;">
+          <img src="<%= listing.images[0].url %>" class="card-img-top" alt="listing_image" style="height: 15rem;">
+          <div class="card-img-overlay"> <i class="fa-solid fa-heart fa-2x save-icon" onclick="event.stopPropagation(); event.preventDefault(); console.log('<%= listing._id %>');"></i> </div>
+          <div class="card-body">
+            <p class="card-text">
+              <%= listing.title %><br>
+                &#8377; <%=listing.price.toLocaleString("en-IN")%> 
+            </p>
+          </div>
+        </div>
+      </a>
+      <% } %>
+      <% } %>
+      <% } %>
+  </div>
+
+ <% if (!hasAny) { %>
+        <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
+            <p style="color: #d9534f; font-weight: bold; font-size: 1.2rem;">
+                Sorry, no listings found
+                . Please try another search!
+            </p>
+        </div>
+    <% } %>
+
+
+
+
+
+  <script>
+  
+   document.querySelectorAll('.save-icon').forEach(icon => {
+    icon.addEventListener('click', e => {
+      e.stopPropagation();
+      e.preventDefault();
+      icon.classList.toggle('clicked');
+    });
+  });
+
+</script>

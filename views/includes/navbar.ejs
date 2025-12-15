@@ -1,0 +1,119 @@
+<style>
+
+</style>
+
+<nav class="navbar navbar-expand-lg bg-body-light border-bottom sticky-top">
+    <div class="container-fluid">
+
+        <a class="navbar-brand" href="/listings"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link logo" href="/listings">Celebrato</a>
+            </div>
+
+            <div class="navbar-nav ms-auto d-flex flex-column align-items-center">
+                <div class="btn-group mb-2 navbar-btn-group" role="group" aria-label="Basic example">
+                    <a href="/listings/search?categories=Wedding,Birthday,Kittie" class="btn btn-light">Events</a>
+                    <a href="/listings/search?categories=DJ,Decorator,Caterer,Photographer,Planner"
+                        class="btn btn-light">Services</a>
+                    <a href="/listings/search?categories=Venue,Getaway,Luxury,Outdoor,Club" class="btn btn-light">
+                        Locations
+                    </a>
+                </div>
+
+                <form class="d-flex" role="search" action="/listings/search" method="GET">
+                    <input class="form-control me-2 search-inp" type="search" placeholder="Search destinations"
+                        id="locationInput" name="location" />
+                    <button class="btn search-btn search-btn" type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>Search
+                    </button>
+                </form>
+            </div>
+
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link btn btn-light search-inp" href="/listings/new">Become a Host</i></a>
+                <a class="nav-link btn btn-light" id="langBtn" style="border-radius: 50%; cursor:pointer;">
+                    <i class="fa-solid fa-globe"></i>
+                </a>
+                <div id="langPopup" class="popup-overlay" tabindex="-1" role="dialog" aria-modal="true"
+                    aria-labelledby="langPopupTitle" style="display:none;">
+                    <div class="popup-card">
+                        <button class="close-btn" id="closeLangPopupBtn" aria-label="Close popup">&times;</button>
+                        <h2 id="langPopupTitle">Select Language</h2><br>
+                        <div class="container">
+                            <form>
+                                <select id="languageSelect" style="width:100%; padding:6px; border-radius:6px;">
+                                    <option value="en">English</option>
+                                    <option value="hi">हिन्दी</option>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <% if(!currUser) { %>
+                    <a class="nav-link btn btn-light search-inp" href="/signup"><b>Sign Up</b></a>
+                    <a class="nav-link btn btn-light search-inp" href="/login"><b>Login</b></a>
+                    <% } %>
+                        <% if(currUser) { %>
+                            <a class="nav-link btn btn-light search-inp" href="/logout"><b>Log Out</b></a>
+                            <a class="nav-link btn btn-light" href="/profile">
+                                <div style="border-radius: 50%; height: 30px; width: 30px; overflow: hidden;">
+                                    <% if (currUser.image && currUser.image.url) { %>
+                                        <img src="<%= currUser.image.url %>" alt="Profile"
+                                            style="height: 100%; width: 100%; object-fit: cover;">
+                                        <% } else { %>
+                                            <i class="fa-solid fa-user"
+                                                style="height: 100%; width: 100%; object-fit: cover;"></i>
+
+                                            <% } %>
+                                </div>
+                            </a>
+                            <% } %>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script>
+    window.addEventListener('scroll', function () {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 1) {
+            navbar.classList.add('shrink');
+        } else {
+            navbar.classList.remove('shrink');
+        }
+    });
+</script>
+
+
+<script>
+    const langBtn = document.getElementById('langBtn');
+    const langPopup = document.getElementById('langPopup');
+    const closeLangPopupBtn = document.getElementById('closeLangPopupBtn');
+    const languageSelect = document.getElementById('languageSelect');
+
+    
+    langBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        langPopup.style.display = 'flex';
+    });
+
+    closeLangPopupBtn.addEventListener('click', function () {
+        langPopup.style.display = 'none';
+    });
+
+    // Optional: Hide popup when clicking outside
+    langPopup.addEventListener('click', function (e) {
+        if (e.target === langPopup) {
+            langPopup.style.display = 'none';
+        }
+    });
+
+    languageSelect.addEventListener('change', function () {
+        const lang = this.value;
+        window.location.search = `?lang=${lang}`;
+    });
+</script>

@@ -1,0 +1,43 @@
+<% layout("/layouts/boilerplate") %>
+
+<% let hasReviews = false; %>
+
+<div class="row">
+  <p><b>All Reviews</b></p>
+
+  <% listings.forEach(listing => { %>
+    <% if (listing.reviews.length > 0) { %>
+      <% for (let i = 0; i < listing.reviews.length; i++) {
+           let review = listing.reviews[i];
+           hasReviews = true;
+      %>
+        <div class="card col-5 ms-3 mb-3">
+          <div class="card-body">
+            <h5 class="card-title">
+              @<%= review.author.username %>
+              
+            </h5>
+
+            <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
+
+            <p class="card-text"><%= review.comment %></p>
+
+            <% if (currUser && review.author && review.author._id.toString() === currUser._id.toString()) { %>
+              <form class="mb-3" method="POST"
+                action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                <button class="btn btn-sm btn-dark">Delete</button>
+              </form>
+            <% } %>
+          </div>
+        </div>
+      <% } %>
+    <% } %>
+  <% }) %>
+
+  <% if (!hasReviews) { %>
+    <p class="ms-3">No reviews found.</p>
+  <% } %>
+</div>
+
+
+<a href="/listings" class="btn btn-outline-dark ms-3 mb-4">Back to Listings</a>

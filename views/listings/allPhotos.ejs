@@ -1,0 +1,91 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+/* Gallery Layout */
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 30px 20px;
+  justify-content: center;
+  background-color: #f9f9f9;
+}
+
+/* Individual Image Container */
+.image-container {
+  width: 280px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* Listing Image */
+.listing-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Upload Form */
+.upload-form {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.upload-form label {
+  font-weight: 500;
+}
+
+.upload-form input[type="file"] {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.upload-form button {
+  align-self: flex-start;
+}
+
+.back-btn {
+  display: inline-block;
+  margin: 20px;
+  text-decoration: none;
+  color: #333;
+}
+</style>
+
+<a href="/listings/<%= listing._id %>" class="btn back-btn">
+  <i class="fa-solid fa-angle-left"></i> Back to Listing
+</a>
+
+<div class="gallery">
+  <% for (let image of listing.images) { %>
+    <div class="image-container">
+      <a href="<%= image.url %>" target="_blank">
+        <img src="<%= image.url %>" alt="Listing Image" class="listing-image">
+      </a>
+    </div>
+  <% } %>
+</div>
+
+<% if (currUser && listing.owner.toString() === currUser._id.toString()) { %>
+  <form action="/listings/<%= listing._id %>/upload-photo" method="POST" enctype="multipart/form-data" class="upload-form">
+    <label for="photoUpload">Upload a photo:</label>
+    <input type="file" name="images" id="photoUpload" accept="image/*" required>
+    <button type="submit" class="btn btn-primary">Upload</button>
+  </form>
+<% } %>

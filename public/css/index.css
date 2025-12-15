@@ -1,0 +1,39 @@
+
+    #filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    
+    }
+
+    .filter {
+      margin-top: 2rem;
+      text-align: center;
+      margin-right: 2rem;
+      opacity: 0.7;
+    }
+
+    .filter:hover {
+      opacity: 1;
+      cursor: pointer;
+    }
+
+    .filter p {
+      font-size: 0.8rem;
+    }
+
+    .save-icon {
+      color: black;
+      transition: color 0.2s;
+    }
+
+    .save-icon.clicked {
+      color: rgb(103, 5, 5);
+     
+    }
+
+    a {
+      text-decoration: none;
+      color: initial;
+    }
+  

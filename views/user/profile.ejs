@@ -1,0 +1,58 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+
+  
+  .profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #6c757d;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    margin-bottom: 1rem;
+  }
+  .profile-card {
+    max-width: 420px;
+    margin: 2rem auto;
+    padding: 2rem 2rem 1.5rem 2rem;
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    text-align: center;
+  }
+  .profile-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+  .profile-placeholder {
+    color: #6c757d;
+    margin-bottom: 1rem;
+  }
+</style>
+
+
+<div class="profile-card">
+  <% if (user.image && user.image.url) { %>
+    <img src="<%= user.image.url %>" alt="Profile Picture" class="profile-image">
+  <% } else { %>
+    <div>
+      <i class="fa-solid fa-user fa-5x profile-placeholder"></i>
+    </div>
+  <% } %>
+  <h2 class="mb-2"><%= user.username %></h2>
+  <p class="mb-1"><i class="fa-solid fa-envelope"></i> <%= user.email %></p>
+  <div class="profile-actions">
+    <a href="/profile/edit" class="btn btn-outline-dark"><i class="fa-solid fa-pen-to-square"></i> Edit Profile</a>
+    <% if (listings && listings.length > 0) { %>
+      <a href="/listings/myListings" class="btn btn-outline-primary"><i class="fa-solid fa-list"></i> My Listings</a>
+      <a href="/booking/hostBookings" class="btn btn-outline-warning"><i class="fa-solid fa-users"></i> Guest Bookings</a>
+    <% } %>
+    <a href="/booking/myBookings" class="btn btn-outline-success"><i class="fa-solid fa-book"></i> My Bookings</a>
+     <a href="/wishlist" class="btn btn-outline-danger"><i class="fa-solid fa-heart"></i> Wishlist</a>
+     <a href="/inbox" class="btn btn-outline-info"><i class="fa-solid fa-inbox"></i> Inbox</a>
+  </div>
+</div>

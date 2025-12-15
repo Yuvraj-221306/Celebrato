@@ -1,0 +1,95 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  #chatBox {
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+  }
+  .chat-form {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-top: 1px solid #ddd;
+  }
+</style>
+
+<div class="container chat-container mt-4">
+    <h3 class="mb-3">Chat</h3>
+
+    <div id="chatBox">
+        <% if (messages.length === 0) { %>
+            <p class="text-muted">No messages yet. Start the conversation!</p>
+        <% } %>
+        <% messages.forEach(msg => { %>
+            <div class="mb-3 d-flex <%= String(msg.senderId) === String(userId) ? 'justify-content-end' : 'justify-content-start' %>">
+                <div style="max-width:70%; padding:10px 16px; border-radius:16px; background:#e4e6eb; color:#222;">
+                    <span><%= msg.message %></span>
+                    <div class="small text-muted mt-1" style="font-size:0.8em;">
+                        <%= String(msg.senderId) === String(userId) ? 'You' : 'Host' %> • <%= new Date(msg.createdAt).toLocaleString() %>
+                        <% if (!msg.read && String(msg.senderId) !== String(userId)) { %>
+                            <span class="badge bg-warning text-dark ms-2">New</span>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+
+    <form class="chat-form d-flex">
+        <input type="text" name="text" class="form-control me-2" placeholder="Type your message..." required autocomplete="off">
+        <button type="submit" class="btn btn-dark">Send</button>
+    </form>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  const listingId = "<%= listingId %>";
+  const userId = "<%= userId %>";
+  const hostId = "<%= hostId %>";
+
+  socket.emit('joinRoom', { listingId, userId, hostId });
+
+  document.querySelector('.chat-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const input = this.querySelector('input[name="text"]');
+    const message = input.value.trim();
+    if (!message) return;
+    socket.emit('chatMessage', { listingId, userId, hostId, message });
+    input.value = '';
+  });
+
+  socket.on('chatMessage', function(msg) {
+    const chatBox = document.getElementById('chatBox');
+    const align = String(msg.senderId) === String(userId) ? 'justify-content-end' : 'justify-content-start';
+    const who = String(msg.senderId) === String(userId) ? 'You' : 'Host';
+    const html = `
+      <div class="mb-3 d-flex ${align}">
+        <div style="max-width:70%; padding:10px 16px; border-radius:16px; background:#e4e6eb; color:#222;">
+          <span>${msg.message}</span>
+          <div class="small text-muted mt-1" style="font-size:0.8em;">
+            ${who} • ${new Date(msg.createdAt).toLocaleString()}
+          </div>
+        </div>
+      </div>
+    `;
+    chatBox.insertAdjacentHTML('beforeend', html);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  });
+</script>

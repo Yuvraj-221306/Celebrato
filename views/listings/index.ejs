@@ -1,0 +1,171 @@
+<% layout("/layouts/boilerplate") %>
+
+  <div id="filters">
+    <a href="/listings/search?categories=Hotspots" class="filter">
+      <div style="color: #d9534f;"><i class="fa-solid fa-fire"></i></div>
+      <p>Hotspots</p>
+    </a>
+    <a href="/listings/search?categories=Venue" class="filter">
+      <div style="color: #2E86C1;"><i class="fa-solid fa-building"></i></div>
+      <p>Venues</p>
+    </a>
+    <a href="/listings/search?categories=Getaway" class="filter">
+      <div style="color: #17A589;"><i class="fa-solid fa-map-location"></i></div>
+      <p>Getaways</p>
+    </a>
+    <a href="/listings/search?categories=Luxury" class="filter">
+      <div style="color: #4169E1;"><i class="fa-solid fa-gem"></i></div>
+      <p>Luxury</p>
+    </a>
+    <a href="/listings/search?categories=Outdoor" class="filter">
+      <div style="color: #28B463;"><i class="fa-solid fa-tree"></i></div>
+      <p>Outdoor</p>
+    </a>
+    <a href="/listings/search?categories=Club" class="filter">
+      <div style="color: #6610F2;"><i class="fa-solid fa-champagne-glasses"></i></div>
+      <p>Clubs</p>
+    </a>
+    <a href="/listings/search?categories=Wedding" class="filter">
+      <div style="color: #FFD700;"><i class="fa-solid fa-crown"></i></div>
+      <p>Weddings</p>
+    </a>
+    <a href="/listings/search?categories=Birthday" class="filter">
+      <div style="color: #FF6F61;"><i class="fa-solid fa-cake-candles"></i></div>
+      <p>Birthdays</p>
+    </a>
+    <a href="/listings/search?categories=Dining" class="filter">
+      <div style="color: #CA6F1E;"><i class="fa-solid fa-plate-wheat"></i></div>
+      <p>Dining</p>
+    </a>
+    <a href="/listings/search?categories=Kittie" class="filter">
+      <div style="color: #F1948A;"><i class="fa-solid fa-comments"></i></div>
+      <p>Kitties</p>
+    </a>
+    <a href="/listings/search?categories=DJ" class="filter">
+      <div style="color: #2980B9;"><i class="fa-solid fa-music"></i></div>
+      <p>Dj</p>
+    </a>
+    <a href="/listings/search?categories=Planner" class="filter">
+      <div style="color: #1A5276;"><i class="fa-solid fa-user-tie"></i></div>
+      <p>Planners</p>
+    </a>
+    <a href="/listings/search?categories=Photographer" class="filter">
+      <div style="color: #566573;"><i class="fa-solid fa-camera-retro"></i></div>
+      <p>Photos</p>
+    </a>
+    <a href="/listings/search?categories=Decorator" class="filter">
+      <div style="color: #5DADE2;"><i class="fa-solid fa-paint-roller"></i></div>
+      <p>Decors</p>
+    </a>
+    <a href="/listings/search?categories=Caterer" class="filter">
+      <div style="color: #E67E22;"><i class="fa-solid fa-utensils"></i></div>
+      <p>Catering</p>
+    </a>
+  </div>
+  <hr>
+
+
+  <div class="row row-cols-lg-3 row-cols-mid-2 row-cols-sm-1 mt-3">
+    <h3 style="width:100%">Kolkata</h3>
+    <% for(let listing of allListings) { %>
+      <% if(listing.location && listing.location.toLowerCase()==="kolkata" ) { %>
+
+        <a href="/listings/<%= listing._id %>" class="listing-link">
+          <div class="card col listing-card" style="border-radius: 1rem;">
+            <img src="<%= listing.images[0].url %>" class="card-img-top" alt="listing_image" style="height: 15rem;">
+            <div class="card-img-overlay"> <i
+                class="fa-solid fa-heart fa-2x save-icon  <%= currUser && currUser.wishlist && currUser.wishlist.includes(listing._id) ? 'clicked' : '' %>"
+                data-listing-id="<%= listing._id %>" onclick="event.stopPropagation(); event.preventDefault();"></i>
+            </div>
+            <div class="card-body">
+              <p class="card-text">
+                <%= listing.title %><br>
+                  &#8377; <%=listing.price.toLocaleString("en-IN")%>
+                    
+              </p>
+            </div>
+          </div>
+        </a>
+        <% } %>
+          <% } %>
+
+            <h3 style="width:100%">Jamshedpur</h3>
+            <% for(let listing of allListings) { %>
+              <% if(listing.location && listing.location.toLowerCase()==="jamshedpur" ) { %>
+
+                <a href="/listings/<%= listing._id %>" class="listing-link">
+                  <div class="card col listing-card">
+                    <img src="<%= listing.images[0].url %>" class="card-img-top" alt="listing_image"
+                      style="height: 15rem;">
+                    <div class="card-img-overlay"> <i
+                        class="fa-solid fa-heart fa-2x save-icon <%= currUser && currUser.wishlist && currUser.wishlist.includes(listing._id) ? 'clicked' : '' %>"
+                        data-listing-id="<%= listing._id %>"
+                        onclick="event.stopPropagation(); event.preventDefault();"></i>
+                    </div>
+                    <div class="card-body">
+                      <p class="card-text">
+                        <%= listing.title %><br>
+                          &#8377; <%=listing.price.toLocaleString("en-IN")%> 
+                      </p>
+                    </div>
+                  </div>
+                </a>
+                <% } %>
+                  <% } %>
+
+                    <h3 style="width:100%">Pune</h3>
+                    <% for(let listing of allListings) { %>
+                      <% if(listing.location && listing.location.toLowerCase()==="pune" ) { %>
+
+                        <a href="/listings/<%= listing._id %>" class="listing-link">
+                          <div class="card col listing-card">
+                            <img src="<%= listing.images[0].url %>" class="card-img-top" alt="listing_image"
+                              style="height: 15rem;">
+                            <div class="card-img-overlay"> <i
+                                class="fa-solid fa-heart fa-2x save-icon <%= currUser && currUser.wishlist && currUser.wishlist.includes(listing._id) ? 'clicked' : '' %>"
+                                data-listing-id="<%= listing._id %>"
+                                onclick="event.stopPropagation(); event.preventDefault();"></i> </div>
+                            <div class="card-body">
+                              <p class="card-text">
+                                <%= listing.title %><br>
+                                  &#8377; <%=listing.price.toLocaleString("en-IN")%>
+                              </p>
+                            </div>
+                          </div>
+                        </a>
+                        <% } %>
+                          <% } %>
+  </div>
+
+
+  <script>
+    document.querySelectorAll('.save-icon').forEach(icon => {
+      const listingId = icon.getAttribute('data-listing-id');
+      let wishlisted = icon.classList.contains('clicked');
+
+      icon.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+
+        let res;
+        if (!wishlisted) {
+          res = await fetch(`/wishlist/${listingId}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+          });
+        } else {
+          res = await fetch(`/wishlist/${listingId}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+          });
+        }
+
+        if (res.ok) {
+          icon.classList.toggle('clicked');
+          wishlisted = !wishlisted;
+        } else {
+          alert("Failed to update wishlist.");
+        }
+      });
+    });
+  </script>

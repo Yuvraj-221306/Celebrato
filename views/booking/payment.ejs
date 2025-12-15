@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Complete Your Payment</title>
+
+  <!-- ✅ Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #f7f7f7;
+    }
+
+    .payment-card {
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .listing-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .amount-box {
+      background-color: #f0f2f5;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .pay-btn {
+      font-size: 1.2rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+    }
+
+    .text-muted-small {
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg p-4 payment-card" style="max-width: 500px; width: 100%;">
+      
+      <h2 class="text-center mb-4">Confirm Your Payment</h2>
+
+      <!-- ✅ Listing Image -->
+      <% if (listing.images && listing.images.length > 0) { %>
+        <img src="<%= listing.images[0].url %>" alt="Listing Image" class="listing-img">
+      <% } %>
+
+      <!-- ✅ Listing Details -->
+      <div class="mb-3">
+        <p class="text-muted mb-1">Listing</p>
+        <h5 class="mb-0"><%= listing.title %></h5>
+      </div>
+
+      <!-- ✅ Amount Box -->
+      <div class="amount-box text-center">
+        <p class="text-muted mb-1">Total Amount</p>
+        <h3 class="text-success fw-bold">₹<%= amount %></h3>
+      </div>
+
+      <!-- ✅ Pay Button -->
+      <button id="payBtn" class="btn btn-danger w-100 pay-btn">Pay Securely</button>
+
+      <p class="text-center mt-3 text-muted-small">Your payment is secure and encrypted.</p>
+    </div>
+  </div>
+
+  <!-- ✅ Razorpay Checkout Script -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    document.getElementById('payBtn').onclick = function() {
+      var options = {
+        "key": "<%= key %>",
+        "amount": "<%= amount * 100 %>", // Convert to paise
+        "currency": "INR",
+        "name": "Event Booking",
+        "description": "Booking Payment",
+        "order_id": "<%= orderId %>",
+        "handler": function (response) {
+          window.location.href =
+            "/booking/payment-success?" +
+            "listingId=<%= listing._id %>" +
+            "&contact=<%= contact %>" +
+            "&startDate=<%= startDate %>" +
+            "&endDate=<%= endDate %>" +
+            "&paymentId=" + response.razorpay_payment_id +
+            "&orderId=<%= orderId %>";
+        }
+      };
+      var rzp = new Razorpay(options);
+      rzp.open();
+    }
+  </script>
+
+  <!-- ✅ Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
